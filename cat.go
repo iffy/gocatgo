@@ -20,7 +20,7 @@ func main() {
 		defer fh.Close()
 		_, err = io.Copy(os.Stdout, fh)
 		if err != nil {
-			log.Printf("Error copying file: %v %v", file, err)
+			log.Printf("Error writing to stdout: %v %v", file, err)
 			rc = 1
 		}
 	}
