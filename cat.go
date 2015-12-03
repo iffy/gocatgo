@@ -1,20 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"os"
+	"io"
 	"log"
-	"io/ioutil"
 )
 
 func main() {
 	files := os.Args[1:]
+	var rc = 0
 
 	for _, file := range files {
-		data, err := ioutil.ReadFile(file)
+		fh, err := os.Open(file)
 		if err != nil {
 			log.Printf("Error reading file: %v %v", file, err)
+			rc = 1
+			continue
 		}
-		fmt.Printf("%s", data)
+		defer fh.Close()
+		_, err = io.Copy(os.Stdout, fh)
+		if err != nil {
+			log.Printf("Error copying file: %v %v", file, err)
+			rc = 1
+		}
 	}
+	os.Exit(rc)
 }
